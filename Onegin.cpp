@@ -1,4 +1,4 @@
-#include <TXlib.h>
+//#include <TXlib.h>
 #include <ctype.h>
 #include <sys/stat.h>
 #include "my_string.h"
@@ -23,7 +23,7 @@ enum SortType
     Reverse      = 1,
     RestoreOrder = 2
 };
-
+//lib
 
 struct String* ReadText(FILE *file, char *buf, size_t *file_size, size_t *lines);
 size_t GetFileSize(const char *file_name);
@@ -36,7 +36,7 @@ int isalpha_win1251(unsigned char c);
 bool isAllNonAlpha(const char *str);
 FILE *my_fopen(const char *file_name, const char* type);
 int FileOutputTask(struct Text *Poem, FILE *file);
-int FillPoemParams(struct Text *Poem, const char *file_name, FILE *file);
+int FillTextParams(struct Text *Poem, const char *file_name, FILE *file);
 int QSort(struct String *ptr, size_t lines);
 int MyCmp(const void *obj1, const void *obj2);
 
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    FillPoemParams(&Poem, file_name, file);
+    FillTextParams(&Poem, file_name, file);
 
     fclose(file);
 
@@ -70,12 +70,12 @@ int main(int argc, char *argv[])
     {
         return 1;
     }
-
+    QSort(Poem.struct_ptr, Poem.lines);
     FileOutputTask(&Poem, file);
 
     fclose(file);
-    QSort(Poem.struct_ptr, Poem.lines);
-    PrintLines(Poem.struct_ptr, Poem.lines);
+    //QSort(Poem.struct_ptr, Poem.lines);
+    //PrintLines(Poem.struct_ptr, Poem.lines);
 
     free(Poem.struct_ptr);
     free(Poem.buf);
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-int FillPoemParams(struct Text *Poem, const char *file_name, FILE *file)
+int FillTextParams(struct Text *Poem, const char *file_name, FILE *file)
 {
 
     Poem->file_size = GetFileSize(file_name);
@@ -97,17 +97,19 @@ int FillPoemParams(struct Text *Poem, const char *file_name, FILE *file)
 
 int FileOutputTask(struct Text *Poem, FILE *file)
 {
-    BubbleSort(Poem->struct_ptr, Poem->lines, Forward);
+    //BubbleSort(Poem->struct_ptr, Poem->lines, Forward);
+    QSort(Poem->struct_ptr, Poem->lines);
     FilePrintLines(file, Poem->struct_ptr, Poem->lines);
     fprintf(file, "\n\n\n\n\n\n\n--------------------------------------------\n\n\n\n\n\n\n");
 
-    BubbleSort(Poem->struct_ptr, Poem->lines, Reverse);
+    //BubbleSort(Poem->struct_ptr, Poem->lines, Reverse);
+    QSort(Poem->struct_ptr, Poem->lines);
     FilePrintLines(file, Poem->struct_ptr, Poem->lines);
     fprintf(file, "\n\n\n\n\n\n\n--------------------------------------------\n\n\n\n\n\n\n");
 
-    BubbleSort(Poem->struct_ptr, Poem->lines, RestoreOrder);
+    //BubbleSort(Poem->struct_ptr, Poem->lines, RestoreOrder);
+    QSort(Poem->struct_ptr, Poem->lines);
     FilePrintLines(file, Poem->struct_ptr, Poem->lines);
-
     return 1;
 }
 
@@ -472,3 +474,8 @@ int MyCmp(const void *obj1, const void *obj2)
 
     return 0;
 }
+
+//qsort() 1) Написать фцию разделения на 2 зоны (большая и меньшая) работает только в начале
+// 2) фция распечатки массива (цвета в консоли)
+// 3) позиция минимальная (налево нельзя) аналогично макс assert() (крайние части серым цветом)
+// 4) синим цветом до левого указателя
